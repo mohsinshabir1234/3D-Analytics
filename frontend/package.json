@@ -2,6 +2,12 @@
   "dependencies": {
     "next": "^15.5.0",
     "react": "^19.1.1",
+    "react-dropzone": "^14.3.8",
     "three": "^0.179.1"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   }
 }
