@@ -4,6 +4,7 @@ import './global.css'
 import Uploader from './components/uploader/page'
 export default function Page() {
     return(
+        console.log("First page loaded"),
         <>
             <h2>Welcome to Log Analytics App</h2>
             <Uploader />
