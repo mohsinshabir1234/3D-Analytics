@@ -1,0 +1,15 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 [2025-08-10T12:00:00Z] error User login failed \{"ip": "192.168.1.101", "userId": 123, "severity": 5\}\
+[2025-08-10T12:01:15Z] info User requested resource \{"ip": "192.168.1.102", "userId": 456, "severity": 1\}\
+[2025-08-10T12:03:42Z] warning Disk space low \{"disk": "/dev/sda1", "freePercent": 7, "severity": 3\}\
+[2025-08-10T12:05:23Z] error Payment processing failed \{"orderId": "A1001", "severity": 5, "location": \{"x": 10, "y": 5, "z": 3\}\}\
+[2025-08-10T12:10:00Z] info Data export completed \{"duration": "120s", "recordsExported": 1500, "severity": 1\}\
+[2025-08-10T12:11:44Z] warning API response slow \{"endpoint": "/api/data", "responseTime": 1200, "severity": 3\}\
+[2025-08-10T12:12:30Z] error Database connection lost \{"db": "users", "severity": 5, "location": \{"x": -4, "y": 3, "z": 0\}\}\
+}

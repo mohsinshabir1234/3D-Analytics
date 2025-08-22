@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import path from "path";
 import { writeFile } from "fs/promises";
-
+import { logFileQueue } from "../../backend/queues/queue";
 // Define the POST handler for the file upload
 export const POST = async (req) => {
     console.log("File upload request received");
@@ -32,7 +32,14 @@ export const POST = async (req) => {
     buffer = Buffer.from(file);
   }
   const filename = file.name;
-
+  //here i am enqueuing the file as a job onto the queue
+ const job = await logFileQueue.add(
+    "logFile",
+    {
+    location:path.join(process.cwd(),"public/assets/"+filename)},
+  {removeOnComplete:true,removeOnFail:true},
+)
+  console.log("This is logfile queue",job.id,job.data)
   try {
     // Write the file to the specified directory (public/assets) with the modified filename
     await writeFile(
