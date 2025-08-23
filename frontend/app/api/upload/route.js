@@ -39,7 +39,7 @@ export const POST = async (req) => {
     location:path.join(process.cwd(),"public/assets/"+filename)},
   {removeOnComplete:true,removeOnFail:true},
 )
-  console.log("This is logfile queue",job.id,job.data)
+  console.log("This is logfile queue",job.id,job.data.location)
   try {
     // Write the file to the specified directory (public/assets) with the modified filename
     await writeFile(
