@@ -8,7 +8,7 @@ export const POST = async (req) => {
     console.log("File upload request received");
   // Parse the incoming form data
   const formData = await req.formData();
-
+  let jobId
   // Get the file from the form data
   const file = formData.get("file");
 
@@ -40,6 +40,7 @@ export const POST = async (req) => {
   {removeOnComplete:true,removeOnFail:true},
 )
   console.log("This is logfile queue",job.id,job.data.location)
+  jobId = job.id
   try {
     // Write the file to the specified directory (public/assets) with the modified filename
     await writeFile(
@@ -54,4 +55,6 @@ export const POST = async (req) => {
     console.log("Error occurred ", error);
     return NextResponse.json({ Message: "Failed", status: 500 });
   }
+  //TODO , check if this is actually returning jobid here or not
+  return jobId;
 };

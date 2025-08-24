@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@supabase/supabase-js": "^2.56.0",
     "bullmq": "^5.58.0",
     "geoip-lite": "^1.4.10",
     "ioredis": "^5.7.0",
