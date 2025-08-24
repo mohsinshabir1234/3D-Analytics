@@ -28,10 +28,13 @@ async function parseLogFile(filePath) {
       console.error("Failed to parse line:", line, err.message);
     }
   }
-      coordinates_data.push(...rawData.map(p => [p.x, p.y, p.z]));
+    coordinates_data.length =0;
+    for (const p of rawData) {
+      coordinates_data.push([p.x, p.y, p.z]);
+}
 
       console.log(rawData)
-      console.log("This is coordinates data ",coordinates_data)
+      // console.log("This is coordinates data ",coordinates_data)
     clustering()
 
 }
