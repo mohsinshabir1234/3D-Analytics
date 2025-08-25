@@ -15,10 +15,11 @@ async function parseLogFile(filePath) {
     crlfDelay: Infinity,
   });
   let rawData =[]
-
+  let parsed
+  let geoLocation
   for await (const line of rl) {
     try {
-      const parsed = JSON.parse(line);
+      parsed = JSON.parse(line);
 
       // Use actual keys from your log JSON
       console.log("Time:", parsed.timestamp);
@@ -43,7 +44,7 @@ async function parseLogFile(filePath) {
       default:
         console.log("Unknown log level detected ")
       }
-    geo_lookup(parsed.ip)
+     geoLocation = geo_lookup(parsed.ip)
 
     } catch (err) {
       console.error("Failed to parse line:", line, err.message);
@@ -56,11 +57,17 @@ async function parseLogFile(filePath) {
       coordinates_data.push([p.x, p.y, p.z]);
 }
 
-      console.log(rawData)
+      console.log("these are coordinates data",coordinates_data)
       // console.log("This is coordinates data ",coordinates_data)
-    clustering()
-    
-
+    const clusteringData = clustering()
+    const parsedData = parsed
+  return {
+    clustering:clusteringData,
+    parsedAll :parsedData,
+    icount:infoCount,
+    wcount:warningCount,
+    ecount:errorCount,
+  }
 }
 
 

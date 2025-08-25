@@ -12,4 +12,5 @@ export default function clustering() {
 
   console.log("this is clusters", clusters.centroids);
   console.log("this is centroids", clusters.clusters.slice(0, 50));
+  return clusters
 }
