@@ -1,12 +1,12 @@
 import {Worker} from 'bullmq';
 import IORedis from 'ioredis';
 import parseLogFile from '../parser/parser.js';
-import { createClient as createRedisClient } from 'redis';
+import WebSocket from 'ws';
 import {  putDataInSpatialSupabase,putDataInStatsSupabase } from './supabaseHelpers.js';
 
-
-const redis = createRedisClient({ url: process.env.REDIS_URL });
-await redis.connect();
+// i will change the socket address when ill docker compose
+const ws = new WebSocket(`ws://localhost:4000`);
+ws.on('open', () => console.log('Worker connected to WebSocket server'));
 
 let position_x
 let position_y
@@ -21,7 +21,6 @@ const logFileWorker = new Worker("logFileForParsing",async job =>{
   const error_count = parsedData.ecount
   const info_count = parsedData.icount
   const warning_count = parsedData.wcount
-  const coordinates_data = parsedData.parsedAll.coordinates
   const log_level = parsedData.parsedAll.level
   const time_stamp = parsedData.parsedAll.timestamp
   const ip_address = parsedData.parsedAll.ip 
@@ -29,19 +28,15 @@ const logFileWorker = new Worker("logFileForParsing",async job =>{
   position_x =parsedData.parsedAll.coordinates.x
   position_y = parsedData.parsedAll.coordinates.y 
   position_z = parsedData.parsedAll.coordinates.z
-  console.log("'this is corrdinates data",parsedData.parsedAll.coordinates.x)
-  // console.log("Giving out parsed data ",parsedData.parsedAll," ecount",parsedData.ecount,parsedData.icount,parsedData.wcount)
-  putDataInStatsSupabase(userId,error_count,info_count,warning_count,status,job.id)
-  putDataInSpatialSupabase(job.id,position_x,position_y,position_z,log_level,time_stamp,ip_address,message)
-    await redis.publish('job_updates', JSON.stringify({
-    jobId: job.data.jobId,
-    event: 'job_complete'
-  }));
-
+  const {data:statsData,error:statsError}= await putDataInStatsSupabase(userId,error_count,info_count,warning_count,status,job.id)
+  
+   if (!statsError && statsData.length > 0 && ws.readyState === WebSocket.OPEN) {
+    try { ws.send(JSON.stringify({ type: 'log_stats_update', data: statsData[0] })); } catch(e){console.error(e);}
+}
     await job.updateProgress(100);
     console.log("Job Done")
     return {completeData:parsedData,logStatus:status}
-},{connection})
+},{connection,concurrency:4})
 logFileWorker.on("completed", (job) => {
   console.log(`Job ${job.id} completed with result:`, job.returnvalue);
 });

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
+import { v4 as uuidv4 } from 'uuid';
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -14,6 +15,7 @@ export async function putDataInStatsSupabase(
   status,
   job_id
 ) {
+    
   console.log(
     "Supabase params:",
     process.env.SUPABASE_URL,
@@ -57,12 +59,13 @@ export async function putDataInSpatialSupabase(
   ip_address,
   message,
 ) {
+      const logEntryId = uuidv4();
     console.log("I am in spatial,",position_x)
   const { data, error } = await supabase
     .from('log_spatial_data')
-    .upsert([{
+    .insert([{
       job_id: job_id,
-      log_entry_id:job_id*position_x,
+      log_entry_id:logEntryId,
       position_x:position_x,
       position_y:position_y,
       position_z:position_z,

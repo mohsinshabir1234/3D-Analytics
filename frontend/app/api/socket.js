@@ -1,36 +1,19 @@
-import { WebSocketServer } from 'ws';
+import { WebSocketServer } from "ws";
 
-export const config = {
-  api: {
-    bodyParser: false, // Required for WebSocket upgrade
-  },
-};
+// Create WS server
+const wss = new WebSocketServer({ port: 4000 });
 
-let wss;
+wss.on("connection", (ws) => {
+  console.log("Client connected");
 
-export default function handler(req, res) {
-  if (!wss) {
-    // Initialize WS server only once
-    wss = new WebSocketServer({ noServer: true });
+  ws.on("close", () => console.log("Client disconnected"));
+});
 
-    // Handle connection
-    wss.on('connection', (ws) => {
-      console.log('Client connected to live-stats WS');
-
-      ws.on('message', (message) => {
-        console.log('Received from client:', message);
-      });
-
-      ws.send(JSON.stringify({ event: 'connected', msg: 'Welcome to 3D logs WS' }));
-    });
-
-    // Upgrade HTTP request to WS
-    req.socket.server.on('upgrade', (request, socket, head) => {
-      wss.handleUpgrade(request, socket, head, (ws) => {
-        wss.emit('connection', ws, request);
-      });
-    });
-  }
-
-  res.status(200).end();
+// Optional: function to broadcast messages to all clients
+export function broadcast(message) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === 1) client.send(message);
+  });
 }
+
+console.log("WebSocket server running on port 4000");
